@@ -23,17 +23,20 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-    	if (other.gameObject.CompareTag("Pickup"))
-    	{
-        	_score++;
-        	Debug.Log("Score: " + _score);
-        	other.gameObject.SetActive(false);
-    	}
-    	else if (other.gameObject.CompareTag("Trap"))
-    	{
-        	health--;
-        	Debug.Log("Health: " + health);
-        	other.gameObject.SetActive(false);
-    	}
+        if (other.gameObject.CompareTag("Pickup"))
+        {
+            _score++;
+            Debug.Log("Score: " + _score);
+            other.gameObject.SetActive(false);
+        }
+        else if (other.gameObject.CompareTag("Trap"))
+        {
+            health--;
+            Debug.Log("Health: " + health);
+        }
+        else if (other.gameObject.CompareTag("Goal"))
+        {
+            Debug.Log("You win!");
+        }
 	}
 }
