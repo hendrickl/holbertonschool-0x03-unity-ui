@@ -1,17 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
 	 public float speed = 5.0f;
-	 public int health = 5;
+	 public int health;
 
 	 private int _score = 0;
+	 private int _initialHealth = 5;
 
     void Start()
-    {}
+    {
+		health = _initialHealth;
+		_score = 0;
+	}
 
+	void Update()
+	{
+	    if (health <= 0)
+	    {
+	        Debug.Log("Game Over!");
+	        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	    }
+	}
+	
     void FixedUpdate()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
