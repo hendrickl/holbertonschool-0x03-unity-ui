@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
 	 public float speed = 5.0f;
+	 private int _score = 0;
+
 
     void Start()
     {}
@@ -17,4 +19,14 @@ public class PlayerController : MonoBehaviour {
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
         transform.Translate(movement * speed * Time.deltaTime, Space.World);
     }
+
+	void OnTriggerEnter(Collider other)
+	{
+    	if (other.gameObject.CompareTag("Pickup"))
+		{
+			_score++;
+			Debug.Log("Score: " + _score);
+			other.gameObject.SetActive(false);
+		}
+	}
 }
