@@ -1,46 +1,46 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-	 public float speed = 6.0f;
-	 public int health;
-     public Text scoreText;
-     public Text healthText;
-     public Text winLoseText;
-     public Image winLoseBG;
+    public float speed = 6.0f;
+    public float secondsBeforeLoadScene = 3f;  
+    public int health;
+    public Text scoreText;
+    public Text healthText;
+    public Text winLoseText;
+    public Image winLoseBG;
 
-	 private int _score = 0;
-     private bool _isGoal;
-	 private int _initialHealth = 5;
+    private int _score = 0;
+    private bool _isGoal;
+    private int _initialHealth = 5;
 
     void Start()
     {
-		health = _initialHealth;
-		_score = 0;
+        health = _initialHealth;
+        _score = 0;
         _isGoal = false;
         winLoseBG.gameObject.SetActive(false);
-	}
-
-	private void Update()
-	{
-	    if (health <= 0)
-	    {
-            _isGoal = false;
-            winLoseBG.gameObject.SetActive(true);
-            winLoseBG.color = Color.red;
-            winLoseText.color = Color.white;
-            SetWinLoseText();
-	        // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-	    }
 
         SetScoreText();
         SetHealthText();
-	}
-	
+    }
+
+    private void Update()
+    {
+        if (health <= 0)
+        {
+            _isGoal = false;
+            SetWinLoseText();
+            StartCoroutine(LoadScene(secondsBeforeLoadScene)); 
+        }
+
+        SetScoreText();
+        SetHealthText();
+    }
+
     private void FixedUpdate()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
@@ -50,8 +50,8 @@ public class PlayerController : MonoBehaviour {
         transform.Translate(movement * speed * Time.deltaTime, Space.World);
     }
 
-	private void OnTriggerEnter(Collider other)
-	{
+    private void OnTriggerEnter(Collider other)
+    {
         if (other.gameObject.CompareTag("Pickup"))
         {
             _score++;
@@ -64,12 +64,16 @@ public class PlayerController : MonoBehaviour {
         else if (other.gameObject.CompareTag("Goal"))
         {
             _isGoal = true;
-            winLoseBG.gameObject.SetActive(true);
-            winLoseBG.color = Color.green;
-            winLoseText.color = Color.black;
             SetWinLoseText();
+            StartCoroutine(LoadScene(secondsBeforeLoadScene));  
         }
-	}
+    }
+
+    private IEnumerator LoadScene(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
     private void SetScoreText()
     {
@@ -86,10 +90,15 @@ public class PlayerController : MonoBehaviour {
         if (_isGoal)
         {
             winLoseText.text = "You Win!";
+            winLoseBG.color = Color.green;
+            winLoseText.color = Color.black;
         }
         else
         {
             winLoseText.text = "Game Over!";
+            winLoseBG.color = Color.red;
+            winLoseText.color = Color.white;
         }
+        winLoseBG.gameObject.SetActive(true);
     }
 }
