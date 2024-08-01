@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-	 public float speed = 5.0f;
+	 public float speed = 6.0f;
 	 public int health;
      public Text scoreText;
      public Text healthText;
@@ -14,12 +14,14 @@ public class PlayerController : MonoBehaviour {
      public Image winLoseBG;
 
 	 private int _score = 0;
+     private bool _isGoal;
 	 private int _initialHealth = 5;
 
     void Start()
     {
 		health = _initialHealth;
 		_score = 0;
+        _isGoal = false;
         winLoseBG.gameObject.SetActive(false);
 	}
 
@@ -27,7 +29,11 @@ public class PlayerController : MonoBehaviour {
 	{
 	    if (health <= 0)
 	    {
-	        Debug.Log("Game Over!");
+            _isGoal = false;
+            winLoseBG.gameObject.SetActive(true);
+            winLoseBG.color = Color.red;
+            winLoseText.color = Color.white;
+            SetWinLoseText();
 	        // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	    }
 
@@ -57,7 +63,7 @@ public class PlayerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("Goal"))
         {
-            Debug.Log("You win!");
+            _isGoal = true;
             winLoseBG.gameObject.SetActive(true);
             winLoseBG.color = Color.green;
             winLoseText.color = Color.black;
@@ -77,6 +83,13 @@ public class PlayerController : MonoBehaviour {
 
     private void SetWinLoseText()
     {
-        winLoseText.text = "You Win!";
+        if (_isGoal)
+        {
+            winLoseText.text = "You Win!";
+        }
+        else
+        {
+            winLoseText.text = "Game Over!";
+        }
     }
 }
