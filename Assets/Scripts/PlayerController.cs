@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour {
 	 public int health;
      public Text scoreText;
      public Text healthText;
+     public Text winLoseText;
+     public Image winLoseBG;
 
 	 private int _score = 0;
 	 private int _initialHealth = 5;
@@ -18,6 +20,7 @@ public class PlayerController : MonoBehaviour {
     {
 		health = _initialHealth;
 		_score = 0;
+        winLoseBG.gameObject.SetActive(false);
 	}
 
 	private void Update()
@@ -25,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 	    if (health <= 0)
 	    {
 	        Debug.Log("Game Over!");
-	        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	        // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	    }
 
         SetScoreText();
@@ -55,6 +58,10 @@ public class PlayerController : MonoBehaviour {
         else if (other.gameObject.CompareTag("Goal"))
         {
             Debug.Log("You win!");
+            winLoseBG.gameObject.SetActive(true);
+            winLoseBG.color = Color.green;
+            winLoseText.color = Color.black;
+            SetWinLoseText();
         }
 	}
 
@@ -65,6 +72,11 @@ public class PlayerController : MonoBehaviour {
 
     private void SetHealthText()
     {
-        healthText.text = "Score: " + health.ToString();
+        healthText.text = "Health: " + health.ToString();
+    }
+
+    private void SetWinLoseText()
+    {
+        winLoseText.text = "You Win!";
     }
 }
