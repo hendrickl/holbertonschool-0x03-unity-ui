@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
 	 public float speed = 5.0f;
 	 public int health;
+     public Text scoreText;
 
 	 private int _score = 0;
 	 private int _initialHealth = 5;
@@ -17,16 +19,18 @@ public class PlayerController : MonoBehaviour {
 		_score = 0;
 	}
 
-	void Update()
+	private void Update()
 	{
 	    if (health <= 0)
 	    {
 	        Debug.Log("Game Over!");
 	        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	    }
+
+        SetScoreText();
 	}
 	
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
@@ -35,12 +39,11 @@ public class PlayerController : MonoBehaviour {
         transform.Translate(movement * speed * Time.deltaTime, Space.World);
     }
 
-	void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
 	{
         if (other.gameObject.CompareTag("Pickup"))
         {
             _score++;
-            Debug.Log("Score: " + _score);
             other.gameObject.SetActive(false);
         }
         else if (other.gameObject.CompareTag("Trap"))
@@ -53,4 +56,9 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("You win!");
         }
 	}
+
+    private void SetScoreText()
+    {
+        scoreText.text = "Score: " + _score.ToString();
+    }
 }
